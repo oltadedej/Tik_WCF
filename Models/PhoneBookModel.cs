@@ -14,9 +14,10 @@ namespace WcfTIK.Models
         public long? id { get; set; }
 
         [DataMember]
-        public string firstName { get; set; }  //pascal case --> camel case
+        public string firstName { get; set; }  //pascal case (FirstName) --> camel case (firstName)
 
-
+        [DataMember]
+        public string lastName { get; set; }  //pascal case --> camel case
 
     }
 }
