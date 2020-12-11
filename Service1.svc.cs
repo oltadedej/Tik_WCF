@@ -1,4 +1,5 @@
-﻿using Phone_Book_DB.Services;
+﻿using Phone_Book_DB;
+using Phone_Book_DB.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
+using WcfTIK.Models;
 
 namespace WcfTIK
 {
@@ -14,6 +16,9 @@ namespace WcfTIK
     public class Service1 : IService1
     {
         private readonly PhoneBookServicesDb servicesDb = new PhoneBookServicesDb();
+
+
+        #region Sync Method
         public string GetData(int value)
         {
             if (servicesDb.IsConnected())
@@ -25,17 +30,116 @@ namespace WcfTIK
             return "Probleme ";
         }
 
-        public CompositeType GetDataUsingDataContract(CompositeType composite)
+        #endregion
+
+        #region  AsyncMethod
+        public IAsyncResult BeginGetByID(long id, AsyncCallback callback, object asyncState)
         {
-            if (composite == null)
+            Output output = new Output();
+            try
             {
-                throw new ArgumentNullException("composite");
+                if (id > 0)
+                {
+                  var item=servicesDb.GetById(id);
+
+                    PhoneBookModel model = new PhoneBookModel();
+                    model.Presect(item);
+                    output.lstPhoneBookModel.Add(model);
+                    output.response.responseCode = ResponseCode.OK;
+                }
             }
-            if (composite.BoolValue)
+          
+            catch(Exception ex)
             {
-                composite.StringValue += "Suffix";
+                output.response.responseCode = ResponseCode.KO;
+                output.response.errorMessage = $"Mesazhi i errorit eshte :{ex.ToString()}";
             }
-            return composite;
+
+            return new CompletedAsyncResult<Output>(output);
         }
+
+        public Output EndGetByID(IAsyncResult r)
+        {
+            CompletedAsyncResult<Output> result = r as CompletedAsyncResult<Output>;
+            return result.Data;
+        }
+
+        public IAsyncResult BeginSave(PhoneBookModel model, AsyncCallback callback, object asyncState)
+        {
+            Output output = new Output();
+            try
+            {
+                if (model != null)
+                {
+                    T_PHONE_BOOK item = new T_PHONE_BOOK();
+                    model.Fill(item);
+                    if (servicesDb.Save(item))
+                    {
+                        output.response.responseCode = ResponseCode.OK;
+                    }
+                    else
+                    {
+                        output.response.responseCode = ResponseCode.KO;
+                        output.response.errorMessage = "Probleme gjate shtimit";
+                    }
+                }
+
+            }
+            catch(Exception ex)
+            {
+                output.response.responseCode = ResponseCode.KO;
+                output.response.errorMessage = $"Errori eshte {ex.ToString()}";
+            }
+
+            return new CompletedAsyncResult<Output>(output);
+
+        }
+
+        public Output EndSave(IAsyncResult r)
+        {
+            CompletedAsyncResult<Output> result = r as CompletedAsyncResult<Output>;
+            return result.Data;
+        }
+
+        public IAsyncResult BeginSearch( AsyncCallback callback, object asyncState)
+        {
+            Output output = new Output();
+            try
+            {
+                var lst = servicesDb.Search();
+                if(lst!=null)
+                {
+                    foreach(var item in lst)
+                    {
+                        PhoneBookModel model = new PhoneBookModel();
+                        model.Presect(item);
+                        output.lstPhoneBookModel.Add(model);
+                    }
+                }
+
+                output.response.responseCode = ResponseCode.OK;
+
+            }
+            catch (Exception ex)
+            {
+                output.response.responseCode = ResponseCode.KO;
+                output.response.errorMessage = $"Errori eshte {ex.ToString()}";
+            }
+
+            return new CompletedAsyncResult<Output>(output);
+
+
+
+
+
+        }
+
+        public Output EndSearch(IAsyncResult r)
+        {
+            CompletedAsyncResult<Output> result = r as CompletedAsyncResult<Output>;
+            return result.Data;
+        }
+
+        #endregion
     }
 }

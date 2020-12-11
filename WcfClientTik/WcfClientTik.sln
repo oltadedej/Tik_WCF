@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30413.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WcfClientTik", "WcfClientTik.csproj", "{B776BFCC-AAB5-4907-8D44-7F80BC1B752D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B776BFCC-AAB5-4907-8D44-7F80BC1B752D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B776BFCC-AAB5-4907-8D44-7F80BC1B752D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B776BFCC-AAB5-4907-8D44-7F80BC1B752D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B776BFCC-AAB5-4907-8D44-7F80BC1B752D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2CF74FCF-76FA-4735-8113-F1D8DEE197E5}
+	EndGlobalSection
+EndGlobal

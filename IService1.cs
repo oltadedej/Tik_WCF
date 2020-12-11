@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
+using WcfTIK.Models;
 
 namespace WcfTIK
 {
@@ -12,6 +13,7 @@ namespace WcfTIK
     [ServiceContract]
     public interface IService1
     {
+        #region Sync Method
 
         [OperationContract]
         [WebInvoke(Method = "GET",
@@ -20,32 +22,39 @@ namespace WcfTIK
           UriTemplate = "GetData?Id={value}")]
         string GetData(int value);
 
-        [OperationContract]
-        CompositeType GetDataUsingDataContract(CompositeType composite);
+       
 
-        // TODO: Add your service operations here
+        #endregion
+        #region
+        [OperationContractAttribute(AsyncPattern = true)]
+        IAsyncResult BeginGetByID(long id, AsyncCallback callback, object asyncState);
+
+        //Note: There is no OperationContractAttribute for the end method.
+        Output EndGetByID(IAsyncResult result);
+
+
+
+        [OperationContractAttribute(AsyncPattern = true)]
+        IAsyncResult BeginSave(PhoneBookModel model, AsyncCallback callback, object asyncState);
+
+        //Note: There is no OperationContractAttribute for the end method.
+        Output EndSave(IAsyncResult result);
+
+
+
+
+        [OperationContractAttribute(AsyncPattern = true)]
+        IAsyncResult BeginSearch(AsyncCallback callback, object asyncState);
+
+        //Note: There is no OperationContractAttribute for the end method.
+        Output EndSearch(IAsyncResult result);
+
+
+        #endregion
+
+
     }
 
 
-    // Use a data contract as illustrated in the sample below to add composite types to service operations.
-    [DataContract]
-    public class CompositeType
-    {
-        bool boolValue = true;
-        string stringValue = "Hello ";
-
-        [DataMember]
-        public bool BoolValue
-        {
-            get { return boolValue; }
-            set { boolValue = value; }
-        }
-
-        [DataMember]
-        public string StringValue
-        {
-            get { return stringValue; }
-            set { stringValue = value; }
-        }
-    }
+  
 }
